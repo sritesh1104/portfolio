@@ -37,7 +37,6 @@
     </section>`;
 
   const labels = (items) => `<div class="labels">${items.map((t) => `<span class="label">${esc(t)}</span>`).join("")}</div>`;
-  const yearsOf = (y) => String(y).match(/\d{4}/g) || ["0"];
 
   // Toolkit icons, used as CSS masks so they take the theme's colours. A tool with no entry shows its first letter.
   const brandIcon = (slug) => `url('https://cdn.jsdelivr.net/npm/simple-icons@13.21.0/icons/${slug}.svg')`;
@@ -159,38 +158,13 @@
       ${S.extracurriculars.map((x) => `
         <div class="led reveal"><span class="eyebrow">${esc(x.period)}</span><strong>${X.keepCase(x.role)}</strong><span class="eyebrow led-org">${esc(x.org)}</span></div>`).join("")}
     </div>
-    <div class="sec sub-sec" id="awards">${awardsBlock()}</div>`;
-
-  // Bars are real counts from S.awards, grouped by the year each award ended
-  function awardsBlock() {
-    const awards = window.sortedAwards();
-    const counts = {};
-    awards.forEach((a) => { const y = yearsOf(a.year).pop(); counts[y] = (counts[y] || 0) + 1; });
-    const bars = Object.entries(counts).sort((a, b) => b[1] - a[1] || b[0] - a[0]);
-    const [topYear, topCount] = bars[0];
-    const star = awards.find((a) => yearsOf(a.year).pop() === topYear);
-    return `
-      <h3 class="chart-title">Awards by Year</h3>
-      <div class="chart">
-        <p class="annot">${topCount} awards in ${esc(topYear)}
-          <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M34 6C20 8 10 18 8 34M8 34l-5-9M8 34l9-6"/></svg>
-        </p>
-        ${bars.map(([y, n], i) => `
-          <div class="bar-row">
-            <span class="bar-name">${esc(y)}</span>
-            <div class="bar-line"><i class="bar ${i === 0 ? "top" : ""}" style="--w:${(n / topCount) * 88}"></i><span class="eyebrow">${n}</span></div>
-          </div>`).join("")}
-        <aside class="slip chart-note reveal" style="--r:-3deg">
-          <span class="tape" aria-hidden="true"></span>
-          <h4>${X.keepCase(star.title)}</h4>
-          <span class="eyebrow">${esc(star.org)} / ${esc(star.year)}</span>
-        </aside>
-      </div>
+    <div class="sec sub-sec" id="awards">
+      <h3 class="section-title">Awards</h3>
       <div class="ledger">
-        ${awards.map((a) => `
+        ${window.sortedAwards().map((a) => `
           <div class="led reveal"><span class="eyebrow">${esc(a.year)}</span><strong>${X.keepCase(a.title)}</strong><span class="eyebrow led-org">${esc(a.org)}</span></div>`).join("")}
-      </div>`;
-  }
+      </div>
+    </div>`;
 
   // ---------- Chapter 05 ----------
   const st = S.stage;
@@ -296,11 +270,11 @@
   window.renderChrome("classic");
   window.observeReveals();
 
-  // Highlighter swipes, marker circles and chart bars draw once they are on screen
+  // Highlighter swipes and marker circles draw once they are on screen
   const drawIO = new IntersectionObserver((entries) => {
     entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("on"); drawIO.unobserve(en.target); } });
   }, { rootMargin: "0px 0px -15% 0px", threshold: 0.6 });
-  document.querySelectorAll(".hl:not(.hero .hl), .circled, .bar-row").forEach((el) => drawIO.observe(el));
+  document.querySelectorAll(".hl:not(.hero .hl), .circled").forEach((el) => drawIO.observe(el));
 
   // The hero highlight doesn't wait for scrolling: it swipes in as soon as the page has loaded
   const heroMark = () => document.querySelector(".hero .hl").classList.add("on");
