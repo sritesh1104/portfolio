@@ -285,5 +285,5 @@
     }
   };
 
-  window.Sections = { ...sections, esc, squiggle, titleStack, portrait };
+  window.Sections = { ...sections, esc, keepCase, squiggle, titleStack, portrait };
 })();

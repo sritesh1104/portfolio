@@ -6,9 +6,9 @@
   const root = document.documentElement;
 
   // ---------- Theme ----------
-  // Explore opens in light mode, Classic in dark mode. Each page remembers the visitor's own choice.
+  // Explore and Classic both open in dark mode. Each page remembers the visitor's own choice.
   const PAGE = document.body.classList.contains("classic") ? "classic" : "explore";
-  const DEFAULT_THEME = PAGE === "classic" ? "dark" : "light";
+  const DEFAULT_THEME = "dark";
   const THEME_KEY = "sn-theme-" + PAGE;
   function getSavedTheme() {
     try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }

@@ -274,10 +274,38 @@ window.SITE = {
     ]
   },
 
-  // Shown in the footer. Update this whenever you change the site.
-  lastUpdated: "28 Sep 2026",
+  // Classic page only (paper explainer style).
+  // Inside "record": ==text== gets the yellow highlighter, {{text}} gets the red marker circle.
+  vox: {
+    label: "Explained",
+    headline: ["How One Actuary", "Ended Up Building"],
+    headlineMark: "AI Tools",
+    recordTitle: "Sritesh Naidu, in Short",
+    record: [
+      "I'm currently an ==AI Lead== and a ==HRD Corp Certified trainer==, where I build AI and automation solutions for businesses and teach professionals how to use AI in their daily work.",
+      "Before this, I spent ==2 years== as an Actuarial Consultant across General Insurance and Takaful, breaking down business problems for insurers and turning complex data into decisions. Making judgement and decisions on portfolios with claim exposure of {{RM100+ million}}.",
+      "What I enjoy most is ==finding where work gets stuck== 🔍 and fixing it, whether that means refining a workflow or building the solution from scratch."
+    ],
+    chapters: {
+      numbers: { title: "The Numbers", sub: "About" },
+      journey: { title: "The Journey", sub: "Work history" },
+      build: { title: "The Build", sub: "Projects" },
+      foundation: { title: "The Foundation", sub: "Education and awards" },
+      people: { title: "Beyond the Desk", sub: "Community, stage and sports" },
+      contact: { title: "Let's Get in Touch", sub: "Contact" }
+    }
+  },
 
-  tools: ["Excel", "VBA", "SQL", "R", "Claude", "LLM tooling", "Notion", "Figma", "Miro", "GitHub", "Lovable"],
+  // Shown in the footer. Update this whenever you change the site.
+  lastUpdated: "1 Nov 2026",
+
+  // Classic shows these groups; Explore shows them as one flat list (see the end of this file)
+  toolGroups: [
+    { name: "AI Assistants", items: ["Claude", "ChatGPT", "Gemini"] },
+    { name: "Build & Automate", items: ["Google Apps Script", "VBA", "GitHub", "Lovable"] },
+    { name: "Data & Analysis", items: ["Excel", "SQL", "R"] },
+    { name: "Communicate & Design", items: ["Word", "PowerPoint", "Notion", "Figma", "Miro"] }
+  ],
   languages: ["English", "Mandarin", "Bahasa Malaysia", "Tamil"],
 
   contact: {
@@ -288,3 +316,4 @@ window.SITE = {
     github: "https://github.com/sritesh1104"
   }
 };
+window.SITE.tools = window.SITE.toolGroups.flatMap((g) => g.items);
