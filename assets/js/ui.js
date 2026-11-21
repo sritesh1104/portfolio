@@ -7,7 +7,7 @@
 
   // ---------- Theme ----------
   // Explore and Classic both open in dark mode. Each page remembers the visitor's own choice.
-  const PAGE = document.body.classList.contains("classic") ? "classic" : "explore";
+  const PAGE = document.body.classList.contains("creator") ? "creator" : document.body.classList.contains("classic") ? "classic" : "explore";
   const DEFAULT_THEME = "dark";
   const THEME_KEY = "sn-theme-" + PAGE;
   function getSavedTheme() {
@@ -33,7 +33,7 @@
     const bar = document.createElement("header");
     bar.className = "topbar";
     bar.innerHTML = `
-      <a class="brand" href="${mode === "explore" ? "index.html" : "classic.html"}">${S.first}<span>.</span></a>
+      <a class="brand" href="${{ explore: "index.html", classic: "classic.html", creator: "creator.html" }[mode]}">${S.first}<span>.</span></a>
       <div class="topbar-right">
         <span class="clock" data-clock></span>
         <button class="theme-switch" type="button"><span class="knob"></span></button>
@@ -43,9 +43,9 @@
     const mt = document.createElement("nav");
     mt.className = "mode-toggle";
     mt.setAttribute("aria-label", "Choose version");
-    mt.innerHTML = `
-      <a href="index.html" class="${mode === "explore" ? "active" : ""}" ${mode === "explore" ? 'aria-current="page"' : ""}>EXPLORE</a>
-      <a href="classic.html" class="${mode === "classic" ? "active" : ""}" ${mode === "classic" ? 'aria-current="page"' : ""}>CLASSIC</a>`;
+    mt.innerHTML = [["explore", "index.html", "EXPLORE"], ["classic", "classic.html", "CLASSIC"], ["creator", "creator.html", "CREATOR"]]
+      .map(([m, href, label]) => `<a href="${href}" class="${mode === m ? "active" : ""}" ${mode === m ? 'aria-current="page"' : ""}>${label}</a>`)
+      .join("");
     document.body.appendChild(mt);
 
     const toast = document.createElement("div");

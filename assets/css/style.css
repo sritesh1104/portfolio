@@ -465,6 +465,16 @@ button { font: inherit; color: inherit; }
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+/* Content creation (Explore panel teaser + creator page) */
+.soon-v { color: var(--muted); opacity: .7; }
+.cr-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+.cr-facts > div { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px 14px 0; }
+.cr-facts > div + div { padding-left: 16px; border-left: 1px solid var(--line); }
+.cr-facts strong { font-family: var(--f-display); font-weight: 400; text-transform: uppercase; font-size: 28px; line-height: 1; }
+.cr-facts a { text-decoration-color: var(--accent); text-underline-offset: 4px; }
+.cr-open { margin-top: 30px; }
+@media (max-width: 520px) { .cr-facts > div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } }
+
 /* Tools strip */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { border: 2px solid var(--ink); border-radius: 999px; padding: 5px 14px; font-weight: 600; font-size: 13px; }

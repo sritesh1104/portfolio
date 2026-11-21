@@ -259,6 +259,39 @@
       </section>`;
     },
 
+    // Explore panel for the camera on the tripod: a short teaser, the full story lives on creator.html
+    creator() {
+      const C = S.creator;
+      const isSoon = (v) => v == null || v === "";
+      const plats = C.platforms.filter((p) => p.name);
+      const top = C.bestVideos.slice(0, 3);
+      return `
+      <section class="sec" id="creator">
+        <div class="sec-head">
+          ${titleStack("Content", "behind the camera")}
+          <p class="sec-lead">${esc(C.line)}</p>
+        </div>
+        <div class="cr-facts reveal">
+          <div><span class="eyebrow">Started</span><strong>${isSoon(C.startedOn) ? '<span class="soon-v">Soon</span>' : esc(C.startedOn)}</strong></div>
+          <div><span class="eyebrow">Find me on</span><strong>${plats.map((p) => p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.name)}</a>` : esc(p.name)).join(", ")}</strong></div>
+        </div>
+        <div class="stage-stats">
+          ${C.stats.map((s) => `<div class="stat"><span class="stat-v">${isSoon(s.value) ? '<span class="soon-v">Soon</span>' : esc(s.value)}</span><span class="stat-l">${esc(s.label)}</span></div>`).join("")}
+        </div>
+        ${top.length ? `
+          <h3 class="sub-head">Top videos</h3>
+          <div class="rows mini-rows">
+            ${top.map((v, i) => `
+              <article class="row reveal">
+                <div class="when">No. ${String(i + 1).padStart(2, "0")}</div>
+                <div><h3>${v.link ? `<a href="${esc(v.link)}" target="_blank" rel="noopener">${esc(v.title)}</a>` : esc(v.title)}</h3>
+                <div class="org">${[v.views && `${v.views} views`, v.platform].filter(Boolean).map(esc).join(" / ")}</div></div>
+              </article>`).join("")}
+          </div>` : ""}
+        <a class="pill accent cr-open" href="creator.html">Open the creator page &rarr;</a>
+      </section>`;
+    },
+
     contact() {
       const c = S.contact;
       const items = [

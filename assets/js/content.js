@@ -274,6 +274,54 @@ window.SITE = {
     ]
   },
 
+  // Content creation: the creator.html page and the camera on the tripod in Explore.
+  // Anything left as null shows as "Soon" on the site. Never put in a number you can't back up.
+  creator: {
+    label: "Now Filming",
+    headline: ["From the Desk", "to the"],
+    headlineMark: "Feed",
+    // Source for every number below: @sritesh.posted tracking sheets (Post Details, Post Stats, Account Stats), as of 21 Nov 2026.
+    // Views are from Instagram Insights screenshots (24h and 7 days), so they are a floor, not lifetime totals.
+    // Sritesh's Instagram bio, word for word
+    line: "Strangers wrote my book 📝 Now I'm sharing every page 📖",
+    startedOn: "4 Oct 2026", // first post, the Intro Reel (confirmed by Sritesh)
+    firstVideo: { title: "Intro Reel", link: "https://www.instagram.com/reel/DeDs8TpTC_f/" },
+    // One entry per platform. followers as text, e.g. "1,240"
+    platforms: [
+      { name: "Instagram", handle: "sritesh.posted", url: "https://www.instagram.com/sritesh.posted/", followers: "112" }
+    ],
+    // Headline numbers. value as text, e.g. { value: "25K+", label: "total views" }
+    stats: [
+      { value: "112", label: "followers" },
+      { value: "121K+", label: "views" },          // 121,878 measured across 20 posts
+      { value: "6K+", label: "likes" },            // about 6,202 measured
+      { value: "22", label: "posts" }              // 13 carousels, 1 intro Reel, 8 engagement Reels
+    ],
+    // Best performing posts, best first, ranked by views (7 day snapshot).
+    // Links read from the Instagram profile on 22 Nov 2026. thumb images live in assets/img/creator/.
+    // type: "reel" shows a play button, "carousel" shows a slides badge and the 4:5 cover in full.
+    bestVideos: [
+      { title: "The Weeknd", platform: "Engagement Reel", date: "Nov 2026", views: "96.6K", likes: "5.3K", type: "reel", link: "https://www.instagram.com/reel/DfbuS6PT38W/", thumb: "assets/img/creator/the-weeknd.jpg" },
+      { title: "Intro Reel", platform: "Collecting Advice", date: "Oct 2026", views: "3.4K", likes: "238", type: "reel", link: "https://www.instagram.com/reel/DeDs8TpTC_f/", thumb: null }, // no cover file found
+      { title: "Seatmates", platform: "Collecting Advice #01", date: "Oct 2026", views: "2.1K", likes: "91", type: "carousel", link: "https://www.instagram.com/p/DeRieFGkwdg/", thumb: "assets/img/creator/seatmates.jpg" },
+      { title: "Nasi Campur", platform: "Collecting Advice #02", date: "Oct 2026", views: "1.7K", likes: "66", type: "carousel", link: "https://www.instagram.com/p/DeV733YkY61/", thumb: "assets/img/creator/nasi-campur.jpg" },
+      { title: "Outlook Down", platform: "Engagement Reel", date: "Nov 2026", views: "1.4K", likes: "29", type: "reel", link: "https://www.instagram.com/reel/Dfrp4NCTnO9/", thumb: "assets/img/creator/outlook-down.jpg" }
+    ],
+    hitsLead: "The posts that landed best so far. Views from Instagram Insights, 7 days after posting.",
+    topics: [
+      { title: "Collecting Advice", script: "advice from strangers", text: "I asked strangers I met in Bali to write life advice in a blank book. One carousel per page." },
+      { title: "Engagement Reels", script: "pop culture, real lessons", text: "A life lesson pulled from whatever is trending, from The Weeknd to GTA VI." },
+      { title: "Travel Stories", script: "Bali and its people", text: "Photos from the trip and the people who made it." }
+    ],
+    // Milestones, newest first
+    milestones: [
+      { date: "7 Nov 2026", title: "First viral Reel", note: "The Weeknd: 96.6K views in a week" },
+      { date: "30 Oct 2026", title: "100 followers", note: "Instagram" },
+      { date: "4 Oct 2026", title: "Launched Collecting Advice", note: "Intro Reel" }
+    ],
+    collabLine: "Open to collabs with Malaysian brands and brands with a Malaysian branch."
+  },
+
   // Classic page only (paper explainer style).
   // Inside "record": ==text== gets the yellow highlighter, {{text}} gets the red marker circle.
   vox: {
@@ -297,7 +345,7 @@ window.SITE = {
   },
 
   // Shown in the footer. Update this whenever you change the site.
-  lastUpdated: "1 Nov 2026",
+  lastUpdated: "22 Nov 2026",
 
   // Classic shows these groups; Explore shows them as one flat list (see the end of this file)
   toolGroups: [

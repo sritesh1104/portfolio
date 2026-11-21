@@ -316,6 +316,86 @@
   const phScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.07, 0.15), screenMat(canvasTex(360, 780, screenPhone)));
   phScreen.position.set(0, 0, 0.0047); phoneBody.add(phScreen);
 
+  // Camera on a tripod -> Content Creation (left end of the desk)
+  // Tabletop version of a travel tripod: foam grips, flip locks, centre column with braces and hook, pan head with a long handle.
+  const creatorG = hotGroup("creator", "Content Creation");
+  const TRI_X = -0.74, TRI_Z = 0.36;
+  creatorG.position.set(TRI_X, DESK_Y, TRI_Z);
+  function rod(a, b, r, material, parent, seg = 14) {
+    const dir = new THREE.Vector3().subVectors(b, a);
+    const m = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(r, r, dir.length(), seg), material));
+    m.position.copy(a).addScaledVector(dir, 0.5);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+    parent.add(m);
+    return m;
+  }
+  const alu = mat("#1d1e21", { metalness: 0.7, roughness: 0.35 });
+  const foam = mat("#0f0f10", { roughness: 0.95 });
+  const lockMat = mat("#2a2c30", { roughness: 0.5 });
+  const TRI_H = 0.25, TRI_R = 0.13;
+  const legs = new THREE.Group(); legs.rotation.y = 0.3; creatorG.add(legs);
+  cyl(0.028, 0.024, 0.024, lockMat, 0, TRI_H, 0, legs, 24); // apex hub
+  const colMid = new THREE.Vector3(0, TRI_H - 0.085, 0);
+  [Math.PI / 2, Math.PI / 2 + (2 * Math.PI) / 3, Math.PI / 2 + (4 * Math.PI) / 3].forEach((a) => {
+    const top = new THREE.Vector3(0.022 * Math.cos(a), TRI_H - 0.004, 0.022 * Math.sin(a));
+    const foot = new THREE.Vector3(TRI_R * Math.cos(a), 0.007, TRI_R * Math.sin(a));
+    const at = (s) => top.clone().lerp(foot, s);
+    rod(at(0), at(0.46), 0.0055, alu, legs);        // upper tube
+    rod(at(0.05), at(0.32), 0.0085, foam, legs);    // foam grip
+    rod(at(0.45), at(0.76), 0.0045, alu, legs);     // middle tube
+    rod(at(0.75), at(0.99), 0.0036, alu, legs);     // lower tube
+    [0.45, 0.75].forEach((s) => rod(at(s - 0.02), at(s + 0.02), 0.0075, lockMat, legs, 10)); // flip locks
+    const tip = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.0065, 12, 8), foam));
+    tip.position.copy(foot); legs.add(tip);
+    rod(colMid, at(0.5), 0.0022, alu, legs, 8);     // spreader brace
+  });
+  rod(new THREE.Vector3(0, TRI_H - 0.115, 0), new THREE.Vector3(0, TRI_H + 0.04, 0), 0.0065, alu, legs); // centre column
+  const hook = new THREE.Mesh(new THREE.TorusGeometry(0.008, 0.0016, 8, 20, Math.PI * 1.4), alu);
+  hook.position.set(0, TRI_H - 0.123, 0); hook.rotation.z = Math.PI * 0.8; legs.add(hook);
+  rod(new THREE.Vector3(0.02, TRI_H, 0), new THREE.Vector3(0.042, TRI_H, 0), 0.004, lockMat, legs, 10); // column lock knob
+
+  // Pan head + camera, aimed toward the viewer
+  const HEAD_Y = TRI_H + 0.04;
+  const head = new THREE.Group(); head.position.y = HEAD_Y; head.rotation.y = 0.42; creatorG.add(head);
+  cyl(0.021, 0.021, 0.012, lockMat, 0, 0.006, 0, head, 24);           // pan base
+  box(0.032, 0.03, 0.03, alu, 0, 0.027, 0, head);                       // tilt block
+  box(0.06, 0.008, 0.046, lockMat, 0, 0.046, 0.004, head);              // quick release plate
+  rod(new THREE.Vector3(0.006, 0.026, -0.012), new THREE.Vector3(0.03, -0.012, -0.15), 0.0042, alu, head);  // pan handle
+  rod(new THREE.Vector3(0.019, 0.006, -0.093), new THREE.Vector3(0.03, -0.012, -0.152), 0.0075, foam, head); // handle grip
+  rod(new THREE.Vector3(-0.016, 0.027, 0), new THREE.Vector3(-0.03, 0.027, 0), 0.005, lockMat, head, 10);   // tilt knob
+
+  const camBody = new THREE.Group(); camBody.position.y = 0.05; head.add(camBody);
+  const camBlack = mat("#1f2023", { roughness: 0.5 });
+  const camRubber = mat("#0c0c0d", { roughness: 0.9 });
+  const BW = 0.11, BH = 0.072, BD = 0.05;
+  box(BW, BH, BD, camBlack, 0, BH / 2, 0, camBody);                                   // body
+  box(0.03, BH - 0.004, BD + 0.016, camRubber, BW / 2 - 0.016, BH / 2, 0.008, camBody); // hand grip
+  box(0.038, 0.024, 0.038, camBlack, 0, BH + 0.01, -0.002, camBody).rotation.x = 0.12; // viewfinder hump
+  box(0.02, 0.004, 0.016, greyMetal, 0, BH + 0.024, -0.002, camBody);                  // hot shoe
+  cyl(0.009, 0.009, 0.007, lockMat, -0.034, BH + 0.0035, -0.004, camBody, 20);          // mode dial
+  cyl(0.005, 0.005, 0.005, greyMetal, BW / 2 - 0.016, BH + 0.0025, 0.016, camBody, 16); // shutter button
+  const lensAt = (z0, z1, r, material, seg = 32) => {
+    const m = cyl(r, r, z1 - z0, material, 0, BH / 2 - 0.002, BD / 2 + (z0 + z1) / 2, camBody, seg);
+    m.rotation.x = Math.PI / 2; return m;
+  };
+  lensAt(0, 0.008, 0.026, greyMetal);           // mount
+  lensAt(0.008, 0.068, 0.028, camBlack);        // barrel
+  lensAt(0.022, 0.044, 0.0296, camRubber);      // focus ring
+  lensAt(0.064, 0.072, 0.0305, camBlack);       // lip
+  const LENS_Y = BH / 2 - 0.002, LENS_Z = BD / 2 + 0.072;
+  // Front glass sits just in front of the lip's end cap
+  const accentRing = shadowed(new THREE.Mesh(new THREE.TorusGeometry(0.0285, 0.0022, 10, 40), mat(ORANGE, { roughness: 0.4, emissive: ORANGE, emissiveIntensity: 0.18 })));
+  accentRing.position.set(0, LENS_Y, LENS_Z); camBody.add(accentRing); // orange ring on the front rim
+  const glass = new THREE.Mesh(new THREE.CircleGeometry(0.026, 40), new THREE.MeshPhysicalMaterial({ color: "#2c4590", roughness: 0.04, metalness: 0.2, clearcoat: 1, iridescence: 1, emissive: "#1b2c66", emissiveIntensity: 0.5 }));
+  glass.position.set(0, LENS_Y, LENS_Z + 0.0006); camBody.add(glass);
+  const iris = new THREE.Mesh(new THREE.CircleGeometry(0.011, 32), new THREE.MeshBasicMaterial({ color: "#05070f" }));
+  iris.position.set(0, LENS_Y, LENS_Z + 0.0009); camBody.add(iris);
+  const glint = new THREE.Mesh(new THREE.CircleGeometry(0.0045, 16), new THREE.MeshBasicMaterial({ color: "#ffffff", transparent: true, opacity: 0.55 }));
+  glint.position.set(-0.009, LENS_Y + 0.01, LENS_Z + 0.0012); camBody.add(glint);
+  // Recording light (basic material, so the hover glow leaves it alone and it can blink)
+  const recLed = new THREE.Mesh(new THREE.SphereGeometry(0.0035, 12, 8), new THREE.MeshBasicMaterial({ color: "#ff2a2a" }));
+  recLed.position.set(-BW / 2 + 0.012, BH - 0.01, BD / 2 + 0.001); camBody.add(recLed);
+  const CREATOR_TOP_Y = DESK_Y + HEAD_Y + 0.05 + BH + 0.075;
 
   // Galaxy ball on a stand (decor)
   const ballTex = canvasTex(512, 256, (g, w, h) => {
@@ -668,9 +748,10 @@
     awards: { pos: V(0.7, 1.74, 0.95), tgt: V(0.7, 1.72, 0) },
     community: { pos: V(0.2, 1.4, 0.62), tgt: V(-1.3, 1.38, 0.62) },
     stage: { pos: V(-0.25, 1.62, 0.78), tgt: V(1.3, 1.6, 0.78) },
+    creator: { pos: V(-0.46, 1.14, 1.1), tgt: V(-0.74, 0.98, 0.36) },
     contact: { pos: V(-0.44, 1.04, 0.84), tgt: V(-0.46, 0.88, 0.3) }
   };
-  const ORDER = ["about", "work", "projects", "education", "awards", "community", "stage", "sports", "contact"];
+  const ORDER = ["about", "work", "projects", "education", "awards", "community", "stage", "sports", "creator", "contact"];
   const ANCHORS = {
     about: V(0.1, 2.12, 0.02),
     work: V(0.25, 1.22, 0.18),
@@ -680,6 +761,7 @@
     awards: V(0.87, 1.95, 0.06),
     community: V(-1.28, 1.62, 0.4),
     stage: V(1.28, 1.86, 0.4), // top of the ON STAGE poster
+    creator: V(TRI_X + 0.01, CREATOR_TOP_Y, TRI_Z), // just above the camera
     contact: V(-0.46, 0.98, 0.33)
   };
 
@@ -857,6 +939,7 @@
     camera.updateProjectionMatrix();
 
     ball.rotation.y = t * 0.00015;
+    recLed.visible = reduceMotion || Math.floor(t / 700) % 2 === 0;
 
     renderer.render(scene, camera);
 
